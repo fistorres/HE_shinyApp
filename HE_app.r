@@ -12,12 +12,26 @@ library(plyr)
 library(reshape2)
 
 library(RColorBrewer)
-setwd("../Ambiente de Trabalho/HE_shinyApp")
-#  options(rsconnect.max.bundle.size=3145728000)
+
+
+# ALTERNATIVE LOCATIONS 
+if (Sys.info()["nodename"] == "LENO"){
+  setwd("C:/Users/futsc/OneDrive - Universidade de Coimbra/Ambiente de Trabalho/CARDIOMIS/heartexpress/github/HE_shinyApp")
+} else {
+  setwd("../Ambiente de Trabalho/HE_shinyApp")
+}
+  #  options(rsconnect.max.bundle.size=3145728000)
 
 source("compFunction.R")
 
 demo <- TRUE
+
+# ALTERNATIVE DATA FILES
+if (Sys.info()["nodename"] == "LENO"){
+ tmpData <- exData_combi <- read.fst("exData_combi.fst")
+ exData_human <- read.fst("exData_human.fst")
+ exData_mouse <- read.fst("exData_mouse.fst")
+} else {
 if (demo) {
   tmpData <- read.fst("demoExprData.fst")
 } else {
@@ -25,8 +39,11 @@ if (demo) {
 }
 row.names(tmpData) <- tmpData[,1]
 tmpData <- tmpData[,-1]
+}
 
 dendData <- readRDS("clustData.rds")
+
+
 corrData <- readRDS("corrData.rds")
 
 
