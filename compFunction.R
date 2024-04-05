@@ -3,8 +3,11 @@ library(fst)
 library(languageserver)
 
 ## MAP 
-merged_genes <- read.fst("data/genes_entrez_map.fst") 
-
+if (Sys.info()["nodename"] == "LENO"){
+  merged_genes <- read.fst("genes_entrez_map.fst") 
+} else {
+  merged_genes <- read.fst("data/genes_entrez_map.fst") 
+}
 remove_leading_X <- function(input_string) {
   if (substr(input_string, 1, 1) == "X") {
     return(substr(input_string, 2, nchar(input_string)))
@@ -135,7 +138,14 @@ library(clusterProfiler)
 ## GO
 go <- c("CC", "BP", "MF")
 
-go_kegg_db_sp <- readRDS("ORA/ORA_data.rds")
+if (Sys.info()["nodename"] == "LENO"){
+  go_kegg_db_sp <- readRDS("ORA_data.rds")
+} else {
+  go_kegg_db_sp <- readRDS("ORA/ORA_data.rds")
+}
+
+
+
 
 getEntrezIds <- function(geneSymb, species) {
   
@@ -303,6 +313,8 @@ getColorScale <- function(mat, minv = -3, maxv = 3) {
 }
 
 ##
+samples_info <- read.fst("samples_info.fst")
+
 spiecesArr <- samples_info[, c('Species','inVitroVivo', 'sampleNames')]
 row.names(spiecesArr) <- spiecesArr$sampleNames
 spiecesArr$inVitroVivo <- paste0(spiecesArr$Species, spiecesArr$inVitroVivo)
